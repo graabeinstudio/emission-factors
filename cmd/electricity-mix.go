@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/graabeinstudio/emission-factors/internal"
@@ -18,9 +19,13 @@ var electricityMixCommand = &cobra.Command{
 	Short: "Run script for generating the electricity mix emission factor",
 	Long: `Run script for generating the electricity mix emission factor.
 			Currently only supports the electricity mix for Norway in 2022.`,
-	Args: cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		location, err := cmd.Flags().GetString("location")
+		locationAsString, err := cmd.Flags().GetString("location")
+		if err != nil {
+			panic(err)
+		}
+
+		location, err := internal.ToLocation(locationAsString)
 		if err != nil {
 			panic(err)
 		}
@@ -30,17 +35,10 @@ var electricityMixCommand = &cobra.Command{
 			panic(err)
 		}
 
-		electricityMix := internal.EmissionFactor{
-			Type: internal.ElectricityMix,
-			Year: year,
-			Location: location,
-			Factor: 19,
-			Unit: "gram CO2e/kWh",
-			Source:
-				"https://www.nve.no/energi/energisystem/kraftproduksjon/hvor-kommer-stroemmen-fra/",
-			Description: "Beregnet CO2 faktor for strømforbruk i Norge i 2022.",
-		}
-
-		fmt.Println(internal.PrettyPrint(electricityMix));
+		if (year != 2022 || location != internal.NORWAY) {
+			panic(errors.New("only supported year and location is '2022' and 'norway'"));
+		} 
+		
+		fmt.Println(internal.PrettyPrint(internal.ElectricityMixNorway2022));
 	},
 }

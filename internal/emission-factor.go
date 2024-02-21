@@ -5,7 +5,8 @@ import "encoding/json"
 type EmissionFactorType = string
 
 const (
-	ElectricityMix EmissionFactorType = "ElectricityMix"
+	ElectricityMix EmissionFactorType = "Electricity mix"
+	DistrictHeating EmissionFactorType = "District heating"
 )
 
 func PrettyPrint(i EmissionFactor) string {
@@ -15,10 +16,10 @@ func PrettyPrint(i EmissionFactor) string {
 
 type EmissionFactor struct {
 	Type        EmissionFactorType `json:"type"`
-	Location    string             `json:"location"`
+	Location    Location           `json:"location"`
 	Year        int                `json:"year"`
 	Factor      int                `json:"factor"`
 	Unit        string             `json:"unit"`
-	Source      string             `json:"source"`
+	Sources     []string           `json:"sources"`
 	Description string             `json:"description"`
 }
