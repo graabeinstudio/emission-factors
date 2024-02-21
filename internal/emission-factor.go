@@ -10,7 +10,7 @@ const (
 	DistrictCooling EmissionFactorType = "District cooling"
 )
 
-func PrettyPrint(i EmissionFactor) string {
+func PrettyPrint(i interface{}) string {
     s, _ := json.MarshalIndent(i, "", "\t")
     return string(s)
 }
@@ -24,3 +24,5 @@ type EmissionFactor struct {
 	Sources     []string           `json:"sources"`
 	Description string             `json:"description"`
 }
+
+var EmissionFactorsNorway2022 = []EmissionFactor{ElectricityMixNorway2022, DistrictHeatingNorway2022, DistrictCoolingNorway2022}

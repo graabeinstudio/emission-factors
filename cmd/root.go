@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -12,6 +13,15 @@ var rootCmd = &cobra.Command{
 	Use:   "emission-factor",
 	Short: "Run script to generate emission factor",
 	Long:  `Run script to generate emission factor. Currently only supports the electricity mix for Norway in 2022.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		year, location := getYearAndLocation(cmd);
+
+		if (year != 2022 || location != internal.NORWAY) {
+			panic(errors.New("only supported year and location is '2022' and 'norway'"));
+		} 
+		
+		fmt.Println(internal.PrettyPrint(internal.EmissionFactorsNorway2022));
+	},
 }
 
 func Execute() {
