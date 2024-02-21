@@ -7,6 +7,7 @@ type EmissionFactorType = string
 const (
 	ElectricityMix EmissionFactorType = "Electricity mix"
 	DistrictHeating EmissionFactorType = "District heating"
+	DistrictCooling EmissionFactorType = "District cooling"
 )
 
 func PrettyPrint(i EmissionFactor) string {

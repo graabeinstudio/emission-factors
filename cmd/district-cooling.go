@@ -10,14 +10,14 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(districtHeatingCommand)
+	rootCmd.AddCommand(districtCoolingCommand)
 }
 
-var districtHeatingCommand = &cobra.Command{
-	Use:   "district-heating",
-	Short: "Run script for generating the district heating emission factor",
-	Long: `Run script for generating the district heating emission factor.
-			Currently only supports the district heating for Norway in 2022.`,
+var districtCoolingCommand = &cobra.Command{
+	Use:   "district-cooling",
+	Short: "Run script for generating the district cooling emission factor",
+	Long: `Run script for generating the district cooling emission factor.
+			Currently only supports the district cooling for Norway in 2022.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		year, location := getYearAndLocation(cmd);
 
@@ -31,22 +31,21 @@ var districtHeatingCommand = &cobra.Command{
 			og gjennomsnittsbergeningen for utslipp fra fjernvarmeinfrastruktur er hentet fra
 			https://www.fjernkontrollen.no/uploaded/files/or.13.21_district_heating_infrastructure.pdf
 		*/
-		recycledHeatFactor := 0.0
-		fossilOilFactor := 286.0
-		fossilGasFactor := 242.0
-		bioEnergyFactor := 11.4
-		surroundingHeatFactor := float64(internal.ElectricityMixNorway2022.Factor) * 0.306 // 30.6% er bruk av elektrisitet
+		heatDrivenCoolingFactor := 0.0
+		freeCoolingFactor := float64(internal.ElectricityMixNorway2022.Factor) * 0.063 // 6.3% er hjelpeelektrisitet 
+		heatPumpFactor := float64(internal.ElectricityMixNorway2022.Factor) * 0.25 // 25% er bruk av elektrisitet
+		compressorCoolingFactor := float64(internal.ElectricityMixNorway2022.Factor) * 0.25 // 25% er bruk av elektrisitet
+		 
 		factor := 
-			0.479 * recycledHeatFactor + 
-			0.012 * fossilOilFactor + 
-			0.022 * fossilGasFactor + 
-			0.072 * float64(internal.ElectricityMixNorway2022.Factor) +
-			0.321 * bioEnergyFactor + // vet ikke hvilken kilde, så tar snittet av alle utslippsfaktorene (TODO: Bruk fordeling fra https://www.fjernkontrollen.no/)
-			0.094 * surroundingHeatFactor
+			0.408 * float64(internal.ElectricityMixNorway2022.Factor) +  // vet ikke hvilken kilde, så bruker elektritetsmiksen
+			0.087 * freeCoolingFactor +
+			0.022 * heatDrivenCoolingFactor + 
+			0.44 * heatPumpFactor+
+			0.043 * compressorCoolingFactor
 
 
-		districtHeating := internal.EmissionFactor{
-			Type: internal.DistrictHeating,
+		districtCooling := internal.EmissionFactor{
+			Type: internal.DistrictCooling,
 			Year: year,
 			Location: location,
 			Factor: int(math.Ceil(factor)),
@@ -57,9 +56,9 @@ var districtHeatingCommand = &cobra.Command{
 					"https://www.fjernkontrollen.no/uploaded/files/2020_06_01_klimaregnskap_for_fjernvarme_2020.pdf",
 					"https://www.fjernkontrollen.no/uploaded/files/or.13.21_district_heating_infrastructure.pdf",
 				},
-			Description: "Beregnet CO2 faktor for fjernvarme i Norge i 2022.",
+			Description: "Beregnet CO2 faktor for fjernkjøling i Norge i 2022.",
 		}
 
-		fmt.Println(internal.PrettyPrint(districtHeating));
+		fmt.Println(internal.PrettyPrint(districtCooling));
 	},
 }
