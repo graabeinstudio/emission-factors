@@ -6,6 +6,13 @@ Currently only contains some emission factors for Norway in 2022, but feel free 
 ## How it works
 
 1. Install go (`brew install go` if on a mac)
-2. Clone the repo
-3. Enter the repo and type `go build .`
-4. Then run the program with `./emission-factors <?emission-factor> --location <location> --year <year>`
+1. Clone the repo
+
+### API
+
+1. Run `docker compose up` to start API
+
+### CLI
+
+1. Type `CGO_ENABLED=0 go build -o emission-factors-cli cli/main.go` to build the CLI.
+1. Then run the CLI with `./emission-factors-cli <?emission-factor> --location <location> --year <year>`
