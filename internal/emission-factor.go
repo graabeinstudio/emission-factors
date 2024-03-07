@@ -2,17 +2,21 @@ package internal
 
 import "encoding/json"
 
-type EmissionFactorType = string
+type EmissionFactorType struct {
+	Name         string `json:"name"`
+	FriendlyName string `json:"friendlyName"`
+	Description  string `json:"description"`
+}
 
-const (
-	ElectricityMix EmissionFactorType = "ELECTRICITY_MIX"
-	DistrictHeating EmissionFactorType = "DISTRICT_HEATING"
-	DistrictCooling EmissionFactorType = "DISTRICT_COOLING"
+var (
+	ElectricityMix  EmissionFactorType = EmissionFactorType{"ELECTRICITY_MIX", "Electricity mix", "Greenhouse gas emission per kwh consumed from the electricity grid in a specific region"}
+	DistrictHeating EmissionFactorType = EmissionFactorType{"DISTRICT_HEATING", "District heating", "Greenhouse gas emission per kwh of district heating"}
+	DistrictCooling EmissionFactorType = EmissionFactorType{"DISTRICT_COOLING", "District cooling", "Greenhouse gas emission per kwh of district cooling"}
 )
 
 func PrettyPrint(i interface{}) string {
-    s, _ := json.MarshalIndent(i, "", "\t")
-    return string(s)
+	s, _ := json.MarshalIndent(i, "", "\t")
+	return string(s)
 }
 
 type EmissionFactor struct {
