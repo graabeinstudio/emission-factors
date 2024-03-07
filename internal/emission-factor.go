@@ -23,9 +23,10 @@ type EmissionFactor struct {
 	Type        EmissionFactorType `json:"type"`
 	Location    Location           `json:"location"`
 	Year        int                `json:"year"`
-	Factor      int                `json:"factor"`
+	Factor      float64            `json:"factor"`
 	Unit        string             `json:"unit"`
 	Sources     []string           `json:"sources"`
+	Name        string             `json:"name"`
 	Description string             `json:"description"`
 }
 

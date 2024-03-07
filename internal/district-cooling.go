@@ -1,7 +1,5 @@
 package internal
 
-import "math"
-
 /*
 	Regnes ut basert på nasjonal fordeling oppgitt på https://www.fjernkontrollen.no/ for 2022,
 	og med utslippsfaktorer fra https://www.fjernkontrollen.no/uploaded/files/2020_06_01_klimaregnskap_for_fjernvarme_2020.pdf
@@ -32,7 +30,7 @@ func districtCoolingNorway2022() EmissionFactor {
 		Type: DistrictCooling,
 		Year: 2022,
 		Location: NORWAY,
-		Factor: int(math.Ceil(factor)),
+		Factor: factor,
 		Unit: "gram CO2e/kWh",
 		Sources:
 			[]string{
@@ -40,6 +38,7 @@ func districtCoolingNorway2022() EmissionFactor {
 				"https://www.fjernkontrollen.no/uploaded/files/2020_06_01_klimaregnskap_for_fjernvarme_2020.pdf",
 				"https://www.fjernkontrollen.no/uploaded/files/or.13.21_district_heating_infrastructure.pdf",
 			},
+		Name: "Fjernkjøling i Norge 2022",
 		Description: "Beregnet CO2 faktor for fjernkjøling i Norge i 2022.",
 	}
 }
