@@ -5,9 +5,9 @@ import "encoding/json"
 type EmissionFactorType = string
 
 const (
-	ElectricityMix EmissionFactorType = "Electricity mix"
-	DistrictHeating EmissionFactorType = "District heating"
-	DistrictCooling EmissionFactorType = "District cooling"
+	ElectricityMix EmissionFactorType = "ELECTRICITY_MIX"
+	DistrictHeating EmissionFactorType = "DISTRICT_HEATING"
+	DistrictCooling EmissionFactorType = "DISTRICT_COOLING"
 )
 
 func PrettyPrint(i interface{}) string {
@@ -25,4 +25,5 @@ type EmissionFactor struct {
 	Description string             `json:"description"`
 }
 
+var EmissionFactorTypes = []EmissionFactorType{ElectricityMix, DistrictHeating, DistrictCooling}
 var EmissionFactorsNorway2022 = []EmissionFactor{ElectricityMixNorway2022, DistrictHeatingNorway2022, DistrictCoolingNorway2022}

@@ -25,6 +25,12 @@ type EmissionFactorsOutput struct {
 	}
 }
 
+type EmissionFactorTypesOutput struct {
+	Body struct {
+		EmissionFactors []internal.EmissionFactorType `json:"emissionFactorsTypes" doc:"Available emission factors types"`
+	}
+}
+
 func main() {
 	appVersion := "0.0.0"
 
@@ -43,9 +49,7 @@ func main() {
 		QuietDownPeriod: 10 * time.Second,
 	  })
 
-	  // Create a CLI app which takes a port option.
 	cli := huma.NewCLI(func(hooks huma.Hooks, options *Options) {
-		// Create a new router & API
 		router := chi.NewMux()
 		router.Use(httplog.RequestLogger(logger))
 
@@ -54,7 +58,6 @@ func main() {
 		api := humachi.New(router, config)
 		
 
-		// Add the operation handler to the API.
 		huma.Get(api, "/emission-factors", func(ctx context.Context, input *struct{
 			Name string `doc:"List all available emission factors"`
 		}) (*EmissionFactorsOutput, error) {
@@ -63,27 +66,30 @@ func main() {
 			return resp, nil
 		})
 
-		// Create the HTTP server.
+		huma.Get(api, "/emission-factor-types", func(ctx context.Context, input *struct{
+			Name string `doc:"List all available emission factors"`
+		}) (*EmissionFactorTypesOutput, error) {
+			resp := &EmissionFactorTypesOutput{}
+			resp.Body.EmissionFactors = internal.EmissionFactorTypes
+			return resp, nil
+		})
+
 		server := http.Server{
 			Addr:    fmt.Sprintf(":%d", options.Port),
 			Handler: router,
 		}
 
-		// Tell the CLI how to start your router.
 		hooks.OnStart(func() {
 			logger.Info(fmt.Sprintf("Starting server on port %d...", options.Port))
 			server.ListenAndServe()
 		})
 
-		// Tell the CLI how to stop your server.
 		hooks.OnStop(func() {
-			// Give the server 5 seconds to gracefully shut down, then give up.
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 			defer cancel()
 			server.Shutdown(ctx)
 		})
 	})
 
-	// Run the CLI. When passed no commands, it starts the server.
 	cli.Run()
 }
